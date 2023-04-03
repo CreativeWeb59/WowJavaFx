@@ -7,7 +7,7 @@ import fr.wowjavafx.factory.MonstreFactory;
 
 
 import java.io.IOException;
-import java.util.Random;
+import java.util.*;
 
 public class Monde {
 
@@ -36,6 +36,7 @@ public class Monde {
 
         // Création des Heros & Monstres et ajout aux équipe spécifique
 
+        String messageFenetrePrincipale;
         heros.addFighter(HerosFactory.build());
         heros.addFighter(HerosFactory.build());
         monstres.addFighter(MonstreFactory.build());
@@ -52,7 +53,11 @@ public class Monde {
         heros.equipeBouclier();
         monstres.equipeBouclier();
 
-        fenetrePrincipale.afficherDansLabel("Création des équipes");
+        messageFenetrePrincipale = "Les équipes se préparent à combattre,\n";
+        messageFenetrePrincipale += "L'équipe des héros est composée de :\n" + heros.get(0).getNom() + " et " + heros.get(1).getNom() + ",\n";
+        messageFenetrePrincipale += "L'équipe des monstres est composée de :\n" + monstres.get(0).getNom() + " et " + monstres.get(1).getNom() + ".\n";
+        fenetrePrincipale.afficherDansLabel(messageFenetrePrincipale);
+
     }
 
     /**
@@ -60,16 +65,19 @@ public class Monde {
      * @return un boolean pour savoir si l'équipe est en vie ou non
      */
     public boolean demarrer() throws IOException {
+        String resultat[];
         boolean etat;
         boolean tourJeux = new Random().nextBoolean();
        try{
            if (tourJeux){
                Combat.combat(heros.chooseFighter(), monstres.chooseFighter());
-               etat = heros.isDead();
+               resultat = heros.isDead();
+               etat = Boolean.parseBoolean(resultat[0]);
                return !etat;
            }else {
                Combat.combat(monstres.chooseFighter(), heros.chooseFighter());
-               etat = monstres.isDead();
+               resultat = monstres.isDead();
+               etat = Boolean.parseBoolean(resultat[0]);
                return !etat;
            }
         } catch (Exception e) {
@@ -85,19 +93,28 @@ public class Monde {
      * @throws IOException
      */
     public boolean demarrerTour() throws IOException {
-        boolean etat;
+        String resultat[];
+        Boolean etat;
         boolean tourJeux = new Random().nextBoolean();
+        // Stocke les messages à afficher dans le label
+        List<String> messageFenetre = new ArrayList<>();
         //System.out.println(heros.size()+" "+monstres.size());
         try{
             if (tourJeux){
                 // Combat.tourCombat(heros.chooseFighter(), monstres.chooseFighter());
-                fenetrePrincipale.afficherDansLabel(Combat.tourCombat(heros.chooseFighter(), monstres.chooseFighter()));
-                etat = heros.isDead();
+                messageFenetre.addAll(Combat.tourCombat(heros.chooseFighter(), monstres.chooseFighter()));
+                fenetrePrincipale.afficherDansLabel(messageFenetre);
+                resultat = heros.isDead();
+                etat = Boolean.parseBoolean(resultat[0]);
+                messageFenetre.add(resultat[1]);
                 return !etat;
             }else {
                 // Combat.tourCombat(monstres.chooseFighter(), heros.chooseFighter());
-                etat = monstres.isDead();
-                fenetrePrincipale.afficherDansLabel(Combat.tourCombat(monstres.chooseFighter(), heros.chooseFighter()));
+                resultat = monstres.isDead();
+                etat = Boolean.parseBoolean(resultat[0]);
+                messageFenetre.add(resultat[1]);
+                messageFenetre.addAll(Combat.tourCombat(monstres.chooseFighter(), heros.chooseFighter()));
+                fenetrePrincipale.afficherDansLabel(messageFenetre);
                 return !etat;
             }
         } catch (Exception e) {
@@ -145,4 +162,14 @@ public class Monde {
         }
         return nomImage;
     }
+
+    /**
+     * traitement du tableau des résultats
+     * besoins :
+     * 1er tableau : nom attaquant - action(attaquer/manger/repos) - pv (debut) - endu (debut) - dégats - perte endu - arme
+     * 2ème tableau : nom defenseur - bouclier(oui/non) - pv (debut) - endu (debut) - dégats subis - perte endu - blocage
+     * 3ème tableau : nourriture - pv - endu
+     * 4ème tableau : résultat du combat : continue ou non du vainqueur
+     */
+
 }

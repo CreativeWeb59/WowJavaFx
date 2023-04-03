@@ -4,6 +4,8 @@ package fr.wowjavafx.actions;
 
 import fr.wowjavafx.world.ICombattants;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Combat {
@@ -35,20 +37,22 @@ public class Combat {
      * @param hero
      * @param monster
      */
-    public static String tourCombat(ICombattants hero, ICombattants monster){
-        String gagnant = "";
+    public static List<String> tourCombat(ICombattants hero, ICombattants monster){
+        // Stocke les messages à afficher dans le label
+        List<String> messageRetour = new ArrayList<>();
+
         // int rand = new Random().nextInt(2);
         boolean turn = new Random().nextBoolean();
         // Si tour Héros
         if (turn) {
-            attaque(hero,monster);
-            gagnant = gagnant(hero, monster);
+            messageRetour.addAll(attaque(hero,monster));
+            messageRetour.add(gagnant(hero, monster));
             // Si tour Monstre
         } else {
-            attaque(monster,hero);
-            gagnant = gagnant(hero, monster);
+            messageRetour.addAll(attaque(monster,hero));
+            messageRetour.add(gagnant(hero, monster));
         }
-        return gagnant;
+        return messageRetour;
     }
 
     /**
@@ -81,44 +85,54 @@ public class Combat {
      * points de vie > 30 => 1 chance sur 5 de manger
      * points de vie < 30 => 1 chance sur 2 de manger
      * si 0 endurance ne peut pas attaquer => manger, si 0 nourriture => passe son tour
+     * Retourne une liste qui contiendra les messages à afficher dans le label du deroullement du combat.
      */
 
-    private static void attaque(ICombattants combattants1, ICombattants combattants2){
+    private static List<String> attaque(ICombattants combattants1, ICombattants combattants2){
 
         // choix entre attaquer ou manger
-
         // creation d'un rand true = attaquer, false = manqger
+
+        // Stocke les messages à afficher dans le label
+        List<String> messageRetour = new ArrayList<>();
+
         int action;
         int nbRandAction = new Random().nextInt(1, 6);
 
         if(combattants1.getSacoche().getNbNourriture() > 0){
             if((combattants1.getEndurance() > 30) && (combattants1.getPointDeVie() > 30) && (nbRandAction == 1)){
-                Manger.manger(combattants1);
+                messageRetour.addAll(Manger.manger(combattants1));
             } else if((combattants1.getEndurance() <= 30) && (combattants1.getPointDeVie() > 30) && combattants1.getEndurance() >= combattants1.perteEnduranceAttaquant() && (new Random().nextInt(1, 4)==1)) {
-                Manger.manger(combattants1);
+                messageRetour.addAll(Manger.manger(combattants1));
             } else  if((combattants1.getEndurance() > 30) && (combattants1.getPointDeVie() <= 30) && combattants1.getEndurance() >= combattants1.perteEnduranceAttaquant() && (new Random().nextInt(1, 3)==1)) {
-                Manger.manger(combattants1);
+                messageRetour.addAll(Manger.manger(combattants1));
             } else  if((combattants1.getEndurance() <= 30) && (combattants1.getPointDeVie() <= 30) && combattants1.getEndurance() >= combattants1.perteEnduranceAttaquant() && (new Random().nextInt(1, 3)==1)){
-                Manger.manger(combattants1);
+                messageRetour.addAll(Manger.manger(combattants1));
             } else if (combattants1.getEndurance() < combattants1.perteEnduranceAttaquant()) {
-                Manger.manger(combattants1);
+                messageRetour.addAll(Manger.manger(combattants1));
             } else {
-                combattants1.attaquer(combattants2);
+                messageRetour.addAll(combattants1.attaquer(combattants2));
             }
         } else {
             System.out.println(combattants1.getNom() + " ne possède pas de nourriture");
+            messageRetour.add(combattants1.getNom() + " ne possède pas de nourriture\n");
             if(combattants1.getEndurance()<combattants1.perteEnduranceAttaquant()){
                 System.out.println(combattants1.getNom() + " n'a pas assez d'endurance et de nourriture pour continuer le combat");
+                messageRetour.add(combattants1.getNom() + " n'a pas assez d'endurance et de nourriture pour continuer le combat\n");
             } else {
-                combattants1.attaquer(combattants2);
+                messageRetour.addAll(combattants1.attaquer(combattants2));
             }
         }
-
 
         // affichage resultat du combat
 
         System.out.println("Il reste " + combattants1.getPointDeVie() + " points de vie a "+ combattants1.getNom() + " et " + combattants1.getEndurance() + " d'endurance");
+        messageRetour.add("Il reste " + combattants1.getPointDeVie() + " points de vie a "+ combattants1.getNom() + " et " + combattants1.getEndurance() + " d'endurance\n");
+
         System.out.println("Il reste " + combattants2.getPointDeVie() + " points de vie a "+ combattants2.getNom() + " et " + combattants2.getEndurance() + " d'endurance");
+        messageRetour.add("Il reste " + combattants2.getPointDeVie() + " points de vie a "+ combattants2.getNom() + " et " + combattants2.getEndurance() + " d'endurance\n");
+
+        return messageRetour;
     }
 
 }

@@ -6,6 +6,7 @@ import fr.wowjavafx.objets.Boucliers;
 import fr.wowjavafx.objets.Nourritures;
 import fr.wowjavafx.objets.Sacoche;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Combattant implements ICombattants {
@@ -96,9 +97,13 @@ public abstract class Combattant implements ICombattants {
      * utilisation du bouclier => moins de degats + perte endurance
      * points d'attaque subis
      * setEndurance passe à zéro si valeur négative
+     * Retourne une liste qui contiendra les messages à afficher dans le label du deroullement du combat.
      */
     @Override
-    public void attaquer(ICombattants adversaire) {
+    public List<String> attaquer(ICombattants adversaire) {
+        // Stocke les messages à afficher dans le label
+        List<String> messageRetour = new ArrayList<>();
+
         Integer degatSubis = 0;
         if ((!adversaire.getBouclierEquipe().getNom().equals("aucun")) && (adversaire.getEndurance() >= perteEnduranceDefenseur(adversaire))){
             // ajout du nombre de points d'encaissement sur l'adversaire
@@ -109,11 +114,15 @@ public abstract class Combattant implements ICombattants {
             }
 
             System.out.println(this.nom + " (" + this.getPointDeVie() + "pv et " + this.getEndurance() + " endu) frappe " + this.getArmeEquipee().getDegat() + " points à " + adversaire.getNom() + " avec " + this.getArmeEquipee().getNom());
+            messageRetour.add(this.nom + " (" + this.getPointDeVie() + "pv et " + this.getEndurance() + " endu) frappe " + this.getArmeEquipee().getDegat() + " points à " + adversaire.getNom() + " avec " + this.getArmeEquipee().getNom() + "\n");
+
             System.out.println(adversaire.getNom() + " (" + adversaire.getPointDeVie() + "pv et "+ adversaire.getEndurance() + " endu) bloque " + adversaire.getBouclierEquipe().getEncaissement() + " points de dégat " +
                     "et perds " + perteEnduranceDefenseur(adversaire) + " d'endurance");
-            System.out.println(this.nom + " inflige au total " +
-                    degatSubis
-                    + " points à " + adversaire.getNom());
+            messageRetour.add(adversaire.getNom() + " (" + adversaire.getPointDeVie() + "pv et "+ adversaire.getEndurance() + " endu) bloque " + adversaire.getBouclierEquipe().getEncaissement() + " points de dégat " +
+                    "et perds " + perteEnduranceDefenseur(adversaire) + " d'endurance\n");
+
+            System.out.println(this.nom + " inflige au total " + degatSubis + " points à " + adversaire.getNom());
+            messageRetour.add(this.nom + " inflige au total " + degatSubis + " points à " + adversaire.getNom() + "\n");
 
             // Adversaire : maj endu et degats subis
             degatSubis = adversaire.getPointDeVie() - degatSubis;
@@ -122,16 +131,23 @@ public abstract class Combattant implements ICombattants {
         } else {
             if (adversaire.getBouclierEquipe().getNom().equals("aucun")) {
                 System.out.println("Le défenseur n'a pas de bouclier");
+                messageRetour.add("Le défenseur n'a pas de bouclier\n");
             } else {
                 System.out.println("Le defenseur n'a pas assez d'endurance pour utiliser son bouclier");
+                messageRetour.add("Le defenseur n'a pas assez d'endurance pour utiliser son bouclier\n");
             }
 
             System.out.println(this.nom + " (" + this.getPointDeVie() + ") inflige " + this.getArmeEquipee().getDegat() + " points à " + adversaire.getNom() + " avec " + this.getArmeEquipee().getNom());
+            messageRetour.add(this.nom + " (" + this.getPointDeVie() + ") inflige " + this.getArmeEquipee().getDegat() + " points à " + adversaire.getNom() + " avec " + this.getArmeEquipee().getNom() + "\n");
+
             System.out.println(adversaire.getNom() + " (" + adversaire.getPointDeVie() + ") reçoit " + this.getArmeEquipee().getDegat() + " dégats");
+            messageRetour.add(adversaire.getNom() + " (" + adversaire.getPointDeVie() + ") reçoit " + this.getArmeEquipee().getDegat() + " dégats\n");
+
             adversaire.setPointDeVie(adversaire.getPointDeVie() - (this.getArmeEquipee().getDegat()));
         }
         // Perte d'endurance de l'attaquant
         this.setEndurance(this.getEndurance() - perteEnduranceAttaquant());
+        return messageRetour;
     }
 
     /**
@@ -176,14 +192,22 @@ public abstract class Combattant implements ICombattants {
      * recupere l'index de la liste des nourritures
      * ajoute points de vie et endurance au combattant
      * supprime l'index de la liste
+     * Retourne une liste qui contiendra les messages à afficher dans le label du deroullement du combat.
      * @param nourritures
      * @param index
      */
-    public void utiliserNourriture(List<Nourritures> nourritures, int index){
+    public List<String> utiliserNourriture(List<Nourritures> nourritures, int index){
+        // Stocke les messages à afficher dans le label
+        List<String> messageRetour = new ArrayList<>();
+
         this.setPointDeVie(this.getPointDeVie() + nourritures.get(index).getNbPointdevie());
         this.setEndurance(this.getEndurance() + nourritures.get(index).getNbEndurance());
         System.out.println(this.nom + " mange " + nourritures.get(index).getNom() + ", il gagne " + nourritures.get(index).getNbPointdevie() +
                 " points de vie et " + nourritures.get(index).getNbEndurance() + " points d'endurance");
+        messageRetour.add(this.nom + " mange " + nourritures.get(index).getNom() + ",\nil gagne " + nourritures.get(index).getNbPointdevie() +
+                " points de vie et " + nourritures.get(index).getNbEndurance() + " points d'endurance\n");
+
         nourritures.remove(index);
+        return messageRetour;
     }
 }

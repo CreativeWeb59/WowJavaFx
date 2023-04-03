@@ -2,6 +2,9 @@ package fr.wowjavafx.actions;
 
 import fr.wowjavafx.world.ICombattants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Manger {
     /**
      * methode pour manger = utilise la nourriture de la sacoche
@@ -10,11 +13,13 @@ public class Manger {
      * utilise la nourriture en ajoutant points de vie et endurance au combattant
      * supprime la nourriture du sac utilisée
      */
-    public static void manger(ICombattants combattants){
+    public static List<String> manger(ICombattants combattants){
+        List<String> messageRetour = new ArrayList<>();
         if(combattants.getPointDeVie() <= combattants.getEndurance()){
-            combattants.utiliserNourriture(combattants.getSacoche().getTabNourriture(), combattants.getSacoche().getBestPdv());
+            messageRetour.addAll(combattants.utiliserNourriture(combattants.getSacoche().getTabNourriture(), combattants.getSacoche().getBestPdv()));
         } else {
-            combattants.utiliserNourriture(combattants.getSacoche().getTabNourriture(), combattants.getSacoche().getBestEndurance());
+            messageRetour.addAll(combattants.utiliserNourriture(combattants.getSacoche().getTabNourriture(), combattants.getSacoche().getBestEndurance()));
         }
+        return messageRetour;
     }
 }

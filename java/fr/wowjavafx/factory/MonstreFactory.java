@@ -26,7 +26,7 @@ public class MonstreFactory {
      * **/
     public static String[] monstrePrenom = new String[] {
             "Gobelin ","Orc ","Troll ","Elfe ","Dragon ","Licorne ","Gorgone ","Minotaure ",
-            "Harpie ","Kraken ","Méduse ","Chimère ","Centaure ","Vampires ","Loup-garou ",
+            "Harpie ","Kraken ","Méduse ","Chimère ","Centaure ","Vampire ","Loup-garou ",
             "Golem ","Banshee ","Naga ","Ange déchu ","Cyclope ","Sphinx ", "Wyvern ",
             "Nécromancien ","Elfe noir ","Succube ","Démon ","Serpent de mer ", "Yéti ","Ondin "
     };

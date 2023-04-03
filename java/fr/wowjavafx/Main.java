@@ -13,6 +13,9 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
         stage.setTitle("Wow Of Java version JavaFx !");
+        stage.setResizable(false);
+        String css = this.getClass().getResource("/fr/wowjavafx/css/main.css").toExternalForm();
+        scene.getStylesheets().add(css);
         stage.setScene(scene);
         stage.show();
     }

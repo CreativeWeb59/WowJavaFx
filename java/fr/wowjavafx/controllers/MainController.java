@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class MainController {
     @FXML
@@ -26,6 +27,7 @@ public class MainController {
     private Monde m;
 
     public void LancerJeu() throws IOException {
+
         this.m = new Monde(this);
 
         System.out.println("Création du monde");
@@ -42,17 +44,20 @@ public class MainController {
         // Affichage des images des combattants
         AttribuerImages(m.imageHero(0), m.imageHero(1), m.imageMonstre(0), m.imageMonstre(1));
 
-        /*boolean condition = true;
-        while(condition){
-            condition = m.demarrer();
-        }
-        m.teamWinner();
+        // Debut du combat, on affiche le bouton Tour Suivant
+        // Et on modifie le texte de Jouer
+        btnTourSuivant.setVisible(true);
+        btnJouer.setText("Recommencer");
 
-         */
+
     }
 
-
+    /**
+     * Methode qui permet de gérer le tour par tour en cliquant sur le bouton continuer.
+     * @throws IOException
+     */
     public void LancerTourSuivant() throws IOException{
+        // Tester si tous les personnages d'une équipe sont morts
         this.m.demarrerTour();
         System.out.println("Tour suivant");
     }
@@ -102,4 +107,11 @@ public class MainController {
         this.labelConsole.setText(messageLabel);
     }
 
+    public void afficherDansLabel(List<String> messageLabel){
+        String messageComplet="";
+        for (String message : messageLabel ) {
+            messageComplet += message;
+        }
+        this.labelConsole.setText(messageComplet);
+    }
 }

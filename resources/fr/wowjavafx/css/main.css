@@ -1,3 +1,14 @@
 AnchorPane{
 	-fx-background-image: url("../images/fondsHerbe.png");
 }
+
+Button{
+    -fx-background-color: white;
+    -fx-font-color: black;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+Button:hover{
+    -fx-cursor: hand;
+    -fx-background-color: white;
+}

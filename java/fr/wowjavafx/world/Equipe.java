@@ -114,16 +114,19 @@ public class Equipe implements Iterable<ICombattants> {
      * Utilise un iterateur pour parcourir la liste de personnages/monstres et savoir s’ils sont morts
      * @return renvoie true si le combattant est en vie, false si mort
      */
-    public boolean isDead(){
-        boolean resultat = true;
+    public String[] isDead(){
+        // boolean resultat = true;
+        String resultat[] = new String[2];
+        resultat[0] = "true";
         Iterator<ICombattants> iter = iterator();
         while(iter.hasNext()){
             ICombattants e = iter.next();
             if(e.getPointDeVie() > 0) {
-                resultat = false ;
+                resultat[0] = "false" ;
             } else {
                 iter.remove();
-                System.out.println(e.getNom()+" est mort !");
+                System.out.println(e.getNom()+" est mort !\n");
+                resultat[1] = e.getNom() + " est mort !\n";
             }
         }
         return resultat;

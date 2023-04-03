@@ -21,14 +21,14 @@ public interface ICombattants {
     public void setEndurance(Integer endurance);
     public Sacoche getSacoche();
     public void setSacoche(Sacoche sacoche);
-    public void attaquer(ICombattants adversaire);
+    public List<String> attaquer(ICombattants adversaire);
     public Armes getArmeEquipee();
     public void setArmeEquipee(int armeEquipee);
     public Boucliers getBouclierEquipe();
     public void setBouclierEquipe(int bouclierEquipe);
     public Integer perteEnduranceAttaquant();
     public Integer perteEnduranceDefenseur(ICombattants adversaire);
-    public void utiliserNourriture(List<Nourritures> nourritures, int index);
+    public List<String> utiliserNourriture(List<Nourritures> nourritures, int index);
     public String toString();
 
 }
